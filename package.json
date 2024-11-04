@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node integration.js"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +13,7 @@
   "dependencies": {
     "axios": "^1.7.7",
     "consola": "^3.2.3",
-    "express": "^4.21.1"
+    "express": "^4.21.1",
+    "transbank-pos-sdk": "^3.0.2"
   }
 }
