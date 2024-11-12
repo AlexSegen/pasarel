@@ -5,24 +5,33 @@ const port = 3000;
 
 app.use(express.json());
 
-const { POSIntegrado } = require('transbank-pos-sdk');
+const { POSIntegrado } = require("transbank-pos-sdk");
 
 const pos = new POSIntegrado();
 
-// Ruta GET
-app.get("/api/last-sale", async (req, res) => {
+// Dictionary
+const DICTIONARY = {
+  "0250": () => pos.getLastSale(),
+  "0700": () => pos.getTotals(),
+  "0260": ({ printOnPos }) => pos.salesDetail(printOnPos),
+};
+
+// Ruta POST
+app.post("/api/code/:code", async (req, res) => {
   try {
-    if (!pos.isConnected()) { // Verificar si el POS está conectado
+    if (!pos.isConnected()) {
+      // Verificar si el POS está conectado
       return res.status(500).send("Error: POS no está conectado");
     }
 
-    const result = await pos.lastSale(false);
+    const code = req.params?.code;
+
+    const result = await DICTIONARY[code](req.body);
     return res.send({ result });
   } catch (error) {
     return res.send(`Error: ${error.message}`);
   }
 });
-
 
 // Iniciar el servidor
 function startServer() {
@@ -34,14 +43,15 @@ function startServer() {
 function startApp() {
   pos.setDebug(true);
 
-  pos.autoconnect() // Buscar y conectar al POS
+  pos
+    .autoconnect() // Buscar y conectar al POS
     .then((port) => {
       if (port === false) {
-        consola.error('No se encontró ningún POS conectado');
+        consola.error("No se encontró ningún POS conectado");
       } else {
-        consola.success('Connected to PORT:', port.path);
+        consola.success("Connected to PORT:", port.path);
         pos.loadKeys(); // Cargar llaves
-        startServer();  // Iniciar el servidor después de una conexión exitosa
+        startServer(); // Iniciar el servidor después de una conexión exitosa
       }
     })
     .catch((err) => {
