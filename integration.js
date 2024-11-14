@@ -7,6 +7,7 @@ app.use(express.json());
 
 const { POSIntegrado } = require("transbank-pos-sdk");
 
+let keys;
 const pos = new POSIntegrado();
 
 // Dictionary
@@ -20,14 +21,13 @@ const DICTIONARY = {
 app.post("/api/code/:code", async (req, res) => {
   try {
     if (!pos.isConnected()) {
-      // Verificar si el POS está conectado
       return res.status(500).send("Error: POS no está conectado");
     }
 
     const code = req.params?.code;
 
     const result = await DICTIONARY[code](req.body);
-    return res.send({ result });
+    return res.send({ result, keys });
   } catch (error) {
     return res.send(`Error: ${error.message}`);
   }
@@ -44,14 +44,14 @@ function startApp() {
   pos.setDebug(true);
 
   pos
-    .autoconnect() // Buscar y conectar al POS
-    .then((port) => {
+    .autoconnect()
+    .then(async (port) => {
       if (port === false) {
         consola.error("No se encontró ningún POS conectado");
       } else {
         consola.success("Connected to PORT:", port.path);
-        pos.loadKeys(); // Cargar llaves
-        startServer(); // Iniciar el servidor después de una conexión exitosa
+        keys = await pos.loadKeys();
+        startServer();
       }
     })
     .catch((err) => {
