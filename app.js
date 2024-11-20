@@ -1,4 +1,5 @@
 const soap = require('strong-soap').soap;
+const cron = require('node-cron');
 const consola = require("consola");
 const { POSIntegrado } = require("transbank-pos-sdk");
 
