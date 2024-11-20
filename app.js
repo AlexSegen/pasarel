@@ -1,11 +1,5 @@
 const soap = require('strong-soap').soap;
 const consola = require("consola");
-const express = require("express");
-const app = express();
-const port = 3000;
-
-app.use(express.json());
-
 const { POSIntegrado } = require("transbank-pos-sdk");
 
 let keys;
@@ -18,7 +12,8 @@ const DICTIONARY = {
   "0260": ({ printOnPos }) => pos.salesDetail(printOnPos),
 };
 
-function checkRequest() {
+function checkRequest(keys) {
+  consola.log('___KEYS___', keys);
   const username = 'vpm_abap';
   const password = 'V@nessit@ntoni@3';
   const requestArgs = {
@@ -46,38 +41,20 @@ function checkRequest() {
 
       const posResult = await DICTIONARY[REQUEST.FUNC]();
       
-      console.log('posResult', posResult);
+      consola.log('___POS_RESULT___', posResult);
     });
   });
 };
   
-
-// Ruta POST
-app.post("/api/code/:code", async (req, res) => {
-  try {
-    if (!pos.isConnected()) {
-      return res.status(500).send("Error: POS no está conectado");
-    }
-
-    const code = req.params?.code;
-
-    const result = await DICTIONARY[code](req.body);
-    return res.send({ result, keys });
-  } catch (error) {
-    return res.send(`Error: ${error.message}`);
-  }
-});
-
-// Iniciar el servidor
-function startServer() {
-  app.listen(port, () => {
-    consola.start(`Servidor escuchando en http://localhost:${port}`);
-  });
+function startCron(keys) {
+    cron.schedule("* * * * *", () => {
+        checkRequest(keys);
+        consola.info("CRON ejecutado:", new Date().toISOString());
+        });
 }
 
 function startApp() {
   pos.setDebug(true);
-
   pos
     .autoconnect()
     .then(async (port) => {
@@ -86,7 +63,7 @@ function startApp() {
       } else {
         consola.success("Connected to PORT:", port.path);
         keys = await pos.loadKeys();
-        startServer();
+        startCron(keys);
       }
     })
     .catch((err) => {
