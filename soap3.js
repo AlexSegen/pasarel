@@ -13,6 +13,7 @@ const DICTIONARY = {
 };
 
 function checkRequest() {
+    const url = './pos.wsdl';
   const username = 'vpm_abap';
   const password = 'V@nessit@ntoni@3';
   const requestArgs = {

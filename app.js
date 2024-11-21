@@ -14,7 +14,7 @@ const DICTIONARY = {
 };
 
 function checkRequest(keys) {
-  consola.log('___KEYS___', keys);
+  const url = './pos.wsdl';
   const username = 'vpm_abap';
   const password = 'V@nessit@ntoni@3';
   const requestArgs = {
