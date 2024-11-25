@@ -51,7 +51,9 @@ function checkRequest() {
         DATUM,
         UZEIT,
         FUNC,
-        RESPONSE: `${values}`
+        RESPONSE: {
+          ITEM: `${values}`
+        }
       };
 
       console.log('requestArgs__', requestArgs);
