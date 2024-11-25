@@ -33,13 +33,14 @@ function checkRequest() {
 
 
     function processData(posResult, {
-      WERKS, VKORG, UNAME, POSID, DATUM, UZEIT,
+      WERKS, VKORG, UNAME, POSID, DATUM, UZEIT, FUNC
     }) {
 
-      const {
-        functionCode,
-        responseCode,
-      } = posResult;
+      const values = '';
+
+      Object.keys(posResult).forEach(key => {
+        values = values.toString().concat(`${posResult[key]}|`);
+      });
 
       const requestArgs = {
         TOPER: 'R',
@@ -50,7 +51,7 @@ function checkRequest() {
         DATUM,
         UZEIT,
         FUNC,
-        RESPONSE:`${functionCode}|${responseCode}`
+        RESPONSE: `${values}`
       };
 
       console.log('requestArgs__', requestArgs);
