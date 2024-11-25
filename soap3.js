@@ -36,7 +36,7 @@ function checkRequest() {
       WERKS, VKORG, UNAME, POSID, DATUM, UZEIT, FUNC
     }) {
 
-      const values = '';
+      let values = '';
 
       Object.keys(posResult).forEach(key => {
         values = values.toString().concat(`${posResult[key]}|`);
