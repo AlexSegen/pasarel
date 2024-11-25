@@ -30,17 +30,37 @@ function checkRequest() {
     }
   
     client.setSecurity(new soap.BasicAuthSecurity(username, password));
+
+
+    function processData(args) {
+
+      const requestArgs = {
+        ...args,
+        TOPER: 'R',
+        RESPONSE: args.REQUEST
+      };
+
+      client.ZRFC_POS_TBK_RESPONSE(requestArgs, async (err, result) => {
+        if (err) {
+          console.error('TBK_RESPONSE: Error invocando método:', err);
+          return;
+        }
+        console.log('TBK_RESPONSE: Resultado del método:', result);
+      });
+    }
   
     client.ZRFC_POS_TBK_REQUEST(requestArgs, async (err, result) => {
       if (err) {
-        console.error('Error invocando método SOAP:', err);
+        console.error('TBK_REQUEST: Error invocando método:', err);
         return;
       }
-      console.log('Resultado del método:', result);
+      console.log('TBK_REQUEST: Resultado del método:', result);
 
       const posResult = await DICTIONARY['0250']();
       
       consola.log('___POS_RESULT___', posResult);
+
+      processData(posResult.REQUEST);
     });
   });
 };
