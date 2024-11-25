@@ -32,21 +32,36 @@ function checkRequest() {
     client.setSecurity(new soap.BasicAuthSecurity(username, password));
 
 
-    function processData(args) {
+    function processData(posResult, {
+      WERKS, VKORG, UNAME, POSID, DATUM, UZEIT,
+    }) {
+
+      const {
+        functionCode,
+        responseCode,
+      } = posResult;
 
       const requestArgs = {
-        ...args,
         TOPER: 'R',
-        RESPONSE: args.REQUEST
+        WERKS,
+        VKORG,
+        UNAME,
+        POSID,
+        DATUM,
+        UZEIT,
+        FUNC,
+        RESPONSE:`${functionCode}|${responseCode}`
       };
 
-      client.ZRFC_POS_TBK_RESPONSE(requestArgs, async (err, result) => {
+      console.log('requestArgs__', requestArgs);
+
+      /* client.ZRFC_POS_TBK_RESPONSE(requestArgs, async (err, result) => {
         if (err) {
           console.error('TBK_RESPONSE: Error invocando método:', err);
           return;
         }
         console.log('TBK_RESPONSE: Resultado del método:', result);
-      });
+      }); */
     }
   
     client.ZRFC_POS_TBK_REQUEST(requestArgs, async (err, result) => {
@@ -56,11 +71,15 @@ function checkRequest() {
       }
       console.log('TBK_REQUEST: Resultado del método:', result);
 
-      const posResult = await DICTIONARY['0250']();
+      const { REQUEST, SUBRC } = result;
+
+      if( SUBRC !== 0) return;
+
+      const posResult = await DICTIONARY[REQUEST.FUNC]();
       
       consola.log('___POS_RESULT___', posResult);
 
-      processData(posResult.REQUEST);
+      processData(posResult, REQUEST);
     });
   });
 };
