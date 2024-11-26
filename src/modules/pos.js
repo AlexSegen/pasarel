@@ -5,9 +5,14 @@ const POS = new POSIntegrado();
 
 // Dictionary
 const DICTIONARY = {
-    "0250": () => POS.getLastSale(),
-    "0700": () => POS.getTotals(),
-    "0260": ({ printOnPos }) => POS.salesDetail(printOnPos),
+    "0250": () => POS.getLastSale(), // TRANSACCIÓN ÚLTIMA VENTA
+    "0500": () => POS.closeDay(), // TRANSACCIÓN DE CIERRE
+    "0700": () => POS.getTotals(), // DETALLE DE VENTAS
+    "0300": () => POS.changeToNormalMode(), // CAMBIO DE MODALIDAD A POS NORMAL
+    "0260": ({ printOnPos }) => POS.salesDetail(printOnPos),  // TRANSACCIÓN TOTALES
+    "0200": ({ amount, ticket, sendStatus, callback }) => POS.sale(amount, ticket, sendStatus, callback), // TRANSACCIONES DE VENTA
+    "1200": ({ operationId }) => POS.refund(operationId), // TRANSACCIÓN ANULACIÓN VENTA
+
 };
 
 export { POS, DICTIONARY, startApp };
