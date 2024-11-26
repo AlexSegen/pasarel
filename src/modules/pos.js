@@ -1,4 +1,4 @@
-import Transbank  from "transbank-pos-sdk";
+import Transbank from "transbank-pos-sdk";
 
 // Pos Instance
 const POS = new Transbank.POSIntegrado();
