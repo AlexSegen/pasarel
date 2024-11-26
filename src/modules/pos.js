@@ -5,6 +5,8 @@ const POS = new POSIntegrado();
 
 // Dictionary
 const DICTIONARY = {
+    "0800": () => POS.loadKeys(), // TRANSACCIÓN CARGA DE LLAVES
+    "0100": () => POS.polling(), // TRANSACCIÓN DE POLLING
     "0250": () => POS.getLastSale(), // TRANSACCIÓN ÚLTIMA VENTA
     "0500": () => POS.closeDay(), // TRANSACCIÓN DE CIERRE
     "0700": () => POS.getTotals(), // DETALLE DE VENTAS
