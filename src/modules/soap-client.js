@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import consola from 'consola';
+import soap from 'strong-soap';
 import { DICTIONARY } from './pos.js';
 
 dotenv.config();
