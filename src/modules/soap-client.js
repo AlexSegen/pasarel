@@ -5,14 +5,13 @@ import { DICTIONARY } from './pos.js';
 
 dotenv.config();
 
-const checkRequest = (keys) => {
-    consola.info('___KEYS__', keys);
-
+const checkRequest = ({ terminalId }) => {
+    
     const { VKORG, WERKS, SOAP_USER, SOAP_PASSWORD } = process.env;
 
     const url = "./pos.wsdl";
     const requestArgs = {
-        POSID: "IT205078",
+        POSID: terminalId,
         VKORG,
         WERKS,
     };
@@ -87,9 +86,15 @@ const checkRequest = (keys) => {
             consola.log("___POS_RESULT___", posResult);
 
             processData(posResult, REQUEST);
+            
+            return;
         });
+
     });
-}
+
+    return;
+
+};
 
 export { checkRequest };
 

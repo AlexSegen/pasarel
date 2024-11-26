@@ -9,7 +9,7 @@ function startCron(keys) {
     checkRequest(keys);
     consola.info("CRON ejecutado:", new Date().toISOString());
   });
-}
+};
 
 function startApp() {
   POS.setDebug(true);
