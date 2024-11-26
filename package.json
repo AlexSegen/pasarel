@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./src/index.js",
     "app": "node app.js",
-    "build": "npx babel ./src/index.js --out-file ./build/compiled.js"
+    "build": "rimraf build && npx babel src --out-dir build"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +19,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "node-cron": "^3.0.3",
+    "rimraf": "^6.0.1",
     "soap": "^1.1.6",
     "strong-soap": "^4.1.6",
     "transbank-pos-sdk": "^3.0.2",
