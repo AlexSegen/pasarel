@@ -1,4 +1,6 @@
 import dotenv from 'dotenv';
+import { DICTIONARY } from './pos';
+
 dotenv.config();
 
 const checkRequest = (keys) => {
