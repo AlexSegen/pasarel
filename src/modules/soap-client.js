@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { DICTIONARY } from './pos';
+import { DICTIONARY } from './pos.js';
 
 dotenv.config();
 
