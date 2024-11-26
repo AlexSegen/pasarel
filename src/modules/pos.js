@@ -1,8 +1,7 @@
-// import { POSIntegrado }  from "transbank-pos-sdk";
-const { POSIntegrado } = require("transbank-pos-sdk");
+import Transbank  from "transbank-pos-sdk";
 
 // Pos Instance
-const POS = new POSIntegrado();
+const POS = new Transbank.POSIntegrado();
 
 // Dictionary
 const DICTIONARY = {
