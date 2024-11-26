@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import consola from 'consola';
 import { soap } from 'strong-soap';
 import { DICTIONARY } from './pos.js';
+import { getArgs } from '../helpers/utils.js';
 
 dotenv.config();
 
@@ -81,9 +82,13 @@ const checkRequest = ({ terminalId }) => {
                 return;
             };
 
-            const posResult = await DICTIONARY[REQUEST.FUNC]();
+            const postargs = getArgs(REQUEST.REQUEST);
 
-            consola.log("___POS_RESULT___", posResult);
+
+            const posResult = await DICTIONARY[REQUEST.FUNC](...postargs);
+            
+
+            consola.info("___POS_RESULT___", posResult);
 
             processData(posResult, REQUEST);
             
@@ -93,7 +98,6 @@ const checkRequest = ({ terminalId }) => {
     });
 
     return;
-
 };
 
 export { checkRequest };
