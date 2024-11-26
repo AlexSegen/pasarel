@@ -17,4 +17,4 @@ const DICTIONARY = {
 
 };
 
-export { POS, DICTIONARY, startApp };
+export { POS, DICTIONARY };
