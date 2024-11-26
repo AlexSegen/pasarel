@@ -21,7 +21,8 @@ function startApp() {
       } else {
         consola.success("Connected to PORT:", port.path);
         const keys = await POS.loadKeys();
-        startCron(keys);
+        //startCron(keys);
+        checkRequest(keys);
       }
     })
     .catch((err) => {
