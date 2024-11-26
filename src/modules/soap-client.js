@@ -75,6 +75,11 @@ const checkRequest = (keys) => {
 
             if (SUBRC !== 0) return;
 
+            if (!DICTIONARY[REQUEST.FUNC]) {
+                consola.error("Código inválido: " + REQUEST.FUNC , err);
+                return;
+            };
+
             const posResult = await DICTIONARY[REQUEST.FUNC]();
 
             consola.log("___POS_RESULT___", posResult);
