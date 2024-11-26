@@ -57,7 +57,7 @@ const checkRequest = (keys) => {
 
             console.log("ZRFC_POS_TBK_RESPONSE args__", args);
 
-            client.ZRFC_POS_TBK_RESPONSE(requestArgs, async (err, _) => {
+            client.ZRFC_POS_TBK_RESPONSE(args, async (err, _) => {
                 if (err) {
                     consola.error("Error en ZRFC_POS_TBK_RESPONSE:", err);
                     return;
