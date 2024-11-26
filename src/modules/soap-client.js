@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import consola from 'consola';
 import { DICTIONARY } from './pos.js';
 
 dotenv.config();
