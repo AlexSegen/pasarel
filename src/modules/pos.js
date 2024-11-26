@@ -1,4 +1,5 @@
-import { POSIntegrado }  from "transbank-pos-sdk";
+// import { POSIntegrado }  from "transbank-pos-sdk";
+const { POSIntegrado } = require("transbank-pos-sdk");
 
 // Pos Instance
 const POS = new POSIntegrado();
