@@ -12,7 +12,12 @@ const DICTIONARY = {
     "0700": () => POS.getTotals(), // DETALLE DE VENTAS
     "0300": () => POS.changeToNormalMode(), // CAMBIO DE MODALIDAD A POS NORMAL
     "0260": ( printOnPos ) => POS.salesDetail(printOnPos),  // TRANSACCIÓN TOTALES
-    "0200": (amount, ticket, sendStatus, callback) => POS.sale(amount, ticket, sendStatus, callback), // TRANSACCIONES DE VENTA
+    "0200": (amount, ticket, sendStatus, callback) => {
+        console.log(
+            `amount: ${amount}, ticket: ${ticket}, sendStatus: ${sendStatus}, callback: ${callback}`
+        )
+        return POS.sale(amount, ticket, sendStatus, callback)
+    }, // TRANSACCIONES DE VENTA
     "1200": ( operationId ) => POS.refund(operationId), // TRANSACCIÓN ANULACIÓN VENTA
 
 };
