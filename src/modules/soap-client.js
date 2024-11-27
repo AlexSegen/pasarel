@@ -10,7 +10,7 @@ const checkRequest = ({ terminalId }) => {
     
     const { VKORG, WERKS, SOAP_USER, SOAP_PASSWORD } = process.env;
 
-    const url = "./pos.wsdl";
+    const url = "./service.wsdl";
     const requestArgs = {
         POSID: terminalId,
         VKORG,

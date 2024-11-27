@@ -7,7 +7,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./src/index.js",
-    "app": "node app.js",
     "build": "rimraf build && npx babel src --out-dir build"
   },
   "keywords": [],
