@@ -2,7 +2,7 @@
 
 const ZRFC_POS_TBK_REQUESTMock = {
     "REQUEST": {
-        "FUNC": "0260",
+        "FUNC": "0250",
         "REQUEST": "0200|15000|20|0|0",
         "WERKS": "WERKS",
         "VKORG": "VKORG",

@@ -40,7 +40,7 @@ const checkRequest = ({ terminalId }) => {
     ) {
       const args = {
         RESPONSE: {
-          ITEM: handlePOSResult(
+          item: handlePOSResult(
             { WERKS, VKORG, UNAME, POSID, DATUM, UZEIT, FUNC },
             posResult
           ),
