@@ -8,8 +8,6 @@ export const downloadWSDL = async () => {
 
 		const { SOAP_USER, SOAP_PASSWORD, SOAP_URL } = CONFIG;
 
-		console.log(CONFIG);
-
 		const response = await axios.get(SOAP_URL, {
 			auth: {
 				username: SOAP_USER,
