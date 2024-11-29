@@ -1,10 +1,10 @@
-import dotenv from 'dotenv';
-import { soap as Soap } from 'strong-soap';
-import { soap as fakeSoap } from './fake-soap.client.js'
-import consola from 'consola';
-import { DICTIONARY } from './pos.js';
-import { getArgs } from '../helpers/utils.js';
-import { CONFIG } from "../config.js"
+import dotenv from "dotenv";
+import { soap as Soap } from "strong-soap";
+import { soap as fakeSoap } from "./fake-soap.client.js";
+import consola from "consola";
+import { DICTIONARY } from "./pos.js";
+import { getArgs, mapvalues, handlePOSResult } from "../helpers/utils.js";
+import { CONFIG } from "../config.js";
 
 dotenv.config();
 
@@ -12,103 +12,84 @@ let soap;
 
 //Soap Client
 if (CONFIG.isDev) {
-    soap = fakeSoap;
+  soap = fakeSoap;
 } else {
-    soap = Soap;
-};
+  soap = Soap;
+}
 
 const checkRequest = ({ terminalId }) => {
-    
-    const { VKORG, WERKS, SOAP_USER, SOAP_PASSWORD } = process.env;
+  const { VKORG, WERKS, SOAP_USER, SOAP_PASSWORD } = process.env;
 
-    const url = "./service.wsdl";
-    const requestArgs = {
-        POSID: terminalId,
-        VKORG,
-        WERKS,
-    };
+  const url = "./service.wsdl";
+  const requestArgs = {
+    POSID: terminalId,
+    VKORG,
+    WERKS,
+  };
 
-    const options = {};
+  const options = {};
 
-    soap.createClient(url, options, (err, client) => {
+  soap.createClient(url, options, (err, client) => {
+    if (err) {
+      console.error("Error creando cliente SOAP:", err);
+      return;
+    }
+
+    client.setSecurity(new soap.BasicAuthSecurity(SOAP_USER, SOAP_PASSWORD));
+
+    function processData(
+      posResult,
+      { WERKS, VKORG, UNAME, POSID, DATUM, UZEIT, FUNC }
+    ) {
+      const args = {
+        RESPONSE: {
+          ITEM: handlePOSResult(
+            { WERKS, VKORG, UNAME, POSID, DATUM, UZEIT, FUNC },
+            posResult
+          ),
+        },
+      };
+
+      console.log("ZRFC_POS_TBK_RESPONSE args", args.RESPONSE);
+
+      client.ZRFC_POS_TBK_RESPONSE(args, async (err, _) => {
         if (err) {
-            console.error("Error creando cliente SOAP:", err);
-            return;
+          consola.error("Error en ZRFC_POS_TBK_RESPONSE:", err);
+          return;
         }
+        consola.success("ZRFC_POS_TBK_RESPONSE exitoso");
+      });
+    }
 
-        client.setSecurity(new soap.BasicAuthSecurity(SOAP_USER, SOAP_PASSWORD));
+    client.ZRFC_POS_TBK_REQUEST(requestArgs, async (err, result) => {
+      if (err) {
+        consola.error("Error en ZRFC_POS_TBK_REQUEST:", err);
+        return;
+      }
+      consola.success("ZRFC_POS_TBK_REQUEST exitoso", result);
 
-        function processData(
-            posResult,
-            { WERKS, VKORG, UNAME, POSID, DATUM, UZEIT, FUNC }
-        ) {
-            let values = "";
+      const { REQUEST, SUBRC } = result;
 
-            Object.keys(posResult).forEach((key) => {
-                values = values.toString().concat(`${posResult[key]}|`);
-            });
+      if (SUBRC !== 0) return;
 
-            const args = {
-                RESPONSE: {
-                    item: [
-                        {
-                            WERKS,
-                            VKORG,
-                            UNAME,
-                            POSID,
-                            DATUM,
-                            UZEIT,
-                            FUNC,
-                            TOPER: "R",
-                            RESPONSE: `${values}`,
-                        },
-                    ],
-                },
-            };
+      if (!DICTIONARY[REQUEST.FUNC]) {
+        consola.error("Código inválido: " + REQUEST.FUNC, err);
+        return;
+      }
 
-            client.ZRFC_POS_TBK_RESPONSE(args, async (err, _) => {
-                if (err) {
-                    consola.error("Error en ZRFC_POS_TBK_RESPONSE:", err);
-                    return;
-                }
-                consola.success("ZRFC_POS_TBK_RESPONSE exitoso");
-            });
-        }
+      const postargs = getArgs(REQUEST.REQUEST);
 
-        client.ZRFC_POS_TBK_REQUEST(requestArgs, async (err, result) => {
-            if (err) {
-                consola.error("Error en ZRFC_POS_TBK_REQUEST:", err);
-                return;
-            }
-            consola.success("ZRFC_POS_TBK_REQUEST exitoso", result);
+      const posResult = await DICTIONARY[REQUEST.FUNC](...postargs);
 
-            const { REQUEST, SUBRC } = result;
+      consola.info("___POS_RESULT___", posResult);
 
-            if (SUBRC !== 0) return;
+      processData(posResult, REQUEST);
 
-            if (!DICTIONARY[REQUEST.FUNC]) {
-                consola.error("Código inválido: " + REQUEST.FUNC , err);
-                return;
-            };
-
-            const postargs = getArgs(REQUEST.REQUEST);
-
-
-            const posResult = await DICTIONARY[REQUEST.FUNC](...postargs);
-            
-
-            consola.info("___POS_RESULT___", posResult);
-
-            processData(posResult, REQUEST);
-            
-            return;
-        });
-
+      return;
     });
+  });
 
-    return;
+  return;
 };
 
 export { checkRequest };
-
-

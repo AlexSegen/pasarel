@@ -1,12 +1,17 @@
-import getLastSaleMock from '../../__mocks__/pos/getLastSale.json' with {type: "json"}; 
+//import getLastSaleMock from '../../__mocks__/pos/getLastSale.json' with {type: "json"}; 
+import { readFile } from 'node:fs/promises';
 
-function getMock(m) {
+const getMock = (f) => `./__mocks__/pos/${f}.json`
+
+
+async function getData(f) {
     try {
+        const data = JSON.parse(await readFile(getMock(f), 'utf8'));
         return data;
-    } catch (error) {
-        
-    }
-}
+      } catch (err) {
+        console.error(`Error reading JSON file: ${err}`);
+      }
+  }
 
 export class POSIntegrado {
     constructor() { }
@@ -35,7 +40,7 @@ export class POSIntegrado {
     }
 
     getLastSale() {
-        return new Promise((resolve) => resolve(getLastSaleMock));
+        return getData('getLastSale');
     }
 
     getTotals() {
@@ -43,6 +48,7 @@ export class POSIntegrado {
     }
 
     salesDetail(printOnPos) {
-        return new Promise((resolve) => resolve(`salesDetail result, printOnPos: ${printOnPos}`));
+        console.log(`[salesDetail] params - printOnPos: ${printOnPos}`);
+        return getData('salesDetail');
     }
 }
