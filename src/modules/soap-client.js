@@ -50,39 +50,54 @@ const checkRequest = ({ terminalId }) => {
       console.log("ZRFC_POS_TBK_RESPONSE args", args.RESPONSE);
 
       client.ZRFC_POS_TBK_RESPONSE(args, async (err, _) => {
-        if (err) {
-          consola.error("Error en ZRFC_POS_TBK_RESPONSE:", err);
+        try {
+          
+          if (err) {
+            consola.error("Error en ZRFC_POS_TBK_RESPONSE:", err);
+            return;
+          }
+          consola.success("ZRFC_POS_TBK_RESPONSE exitoso");
+
           return;
+
+        } catch (error) {
+          consola.error('Ocurrió un error durante la ejecución de ZRFC_POS_TBK_RESPONSE', error);
+          return
         }
-        consola.success("ZRFC_POS_TBK_RESPONSE exitoso");
       });
     }
 
     client.ZRFC_POS_TBK_REQUEST(requestArgs, async (err, result) => {
-      if (err) {
-        consola.error("Error en ZRFC_POS_TBK_REQUEST:", err);
+      try {
+        if (err) {
+          consola.error("Error en ZRFC_POS_TBK_REQUEST:", err);
+          return;
+        }
+        consola.success("ZRFC_POS_TBK_REQUEST exitoso", result);
+  
+        const { REQUEST, SUBRC } = result;
+  
+        if (SUBRC !== 0) return;
+  
+        if (!DICTIONARY[REQUEST.FUNC]) {
+          consola.error("Código inválido: " + REQUEST.FUNC, err);
+          return;
+        }
+  
+        const postargs = getArgs(REQUEST.REQUEST);
+  
+        const posResult = await DICTIONARY[REQUEST.FUNC](...postargs);
+  
+        consola.info("___POS_RESULT___", posResult);
+  
+        processData(posResult, REQUEST);
+  
+        return;
+        
+      } catch (error) {
+        consola.error('Ocurrió un error durante la ejecución de ZRFC_POS_TBK_REQUEST', error);
         return;
       }
-      consola.success("ZRFC_POS_TBK_REQUEST exitoso", result);
-
-      const { REQUEST, SUBRC } = result;
-
-      if (SUBRC !== 0) return;
-
-      if (!DICTIONARY[REQUEST.FUNC]) {
-        consola.error("Código inválido: " + REQUEST.FUNC, err);
-        return;
-      }
-
-      const postargs = getArgs(REQUEST.REQUEST);
-
-      const posResult = await DICTIONARY[REQUEST.FUNC](...postargs);
-
-      consola.info("___POS_RESULT___", posResult);
-
-      processData(posResult, REQUEST);
-
-      return;
     });
   });
 
