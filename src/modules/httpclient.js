@@ -1,14 +1,12 @@
-import dotenv from 'dotenv';
 import axios from 'axios';
 import consola from 'consola';
 import fs from 'fs';
-
-dotenv.config();
+import { CONFIG } from "../config.js";
 
 export const downloadWSDL = async () => {
 	try {
 
-		const { SOAP_USER, SOAP_PASSWORD, SOAP_URL } = process.env;
+		const { SOAP_USER, SOAP_PASSWORD, SOAP_URL } = CONFIG;
 
 		const response = await axios.get(SOAP_URL, {
 			auth: {

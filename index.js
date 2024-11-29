@@ -1,17 +1,15 @@
-import dotenv from 'dotenv';
 import consola from 'consola';
 import { soap } from 'strong-soap';
 import { DICTIONARY } from './src/modules/pos.js';
 import { getArgs } from './src/helpers/utils.js';
 import { downloadWSDL } from './src/modules/httpclient.js';
-
-dotenv.config();
+import { CONFIG } from "./src/config.js";
 
 const checkRequest = async () => {
 
     await downloadWSDL();
     
-    const { VKORG, WERKS, SOAP_USER, SOAP_PASSWORD } = process.env;
+    const { VKORG, WERKS, SOAP_USER, SOAP_PASSWORD } = CONFIG;
 
     const url = "./service.wsdl";
     const requestArgs = {

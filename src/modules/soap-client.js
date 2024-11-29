@@ -1,12 +1,9 @@
-import dotenv from "dotenv";
 import { soap as Soap } from "strong-soap";
 import { soap as fakeSoap } from "./fake-soap.client.js";
 import consola from "consola";
 import { DICTIONARY } from "./pos.js";
-import { getArgs, mapvalues, handlePOSResult } from "../helpers/utils.js";
+import { getArgs, handlePOSResult } from "../helpers/utils.js";
 import { CONFIG } from "../config.js";
-
-dotenv.config();
 
 let soap;
 
@@ -18,7 +15,7 @@ if (CONFIG.isDev) {
 }
 
 const checkRequest = ({ terminalId }) => {
-  const { VKORG, WERKS, SOAP_USER, SOAP_PASSWORD } = process.env;
+  const { VKORG, WERKS, SOAP_USER, SOAP_PASSWORD } = CONFIG;
 
   const url = "./service.wsdl";
   const requestArgs = {
