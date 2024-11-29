@@ -6,7 +6,7 @@ import { checkRequest } from './modules/soap-client.js'
 import { downloadWSDL } from './modules/httpclient.js';
 
 function startCron(keys) {
-  cron.schedule("*/10 * * * * *", () => {
+  cron.schedule("*/5 * * * * *", () => {
     consola.info("CRON ejecutado:", new Date().toISOString());
     try {
       checkRequest(keys);
