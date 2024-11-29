@@ -1,10 +1,21 @@
 import dotenv from 'dotenv';
+import { soap as Soap } from 'strong-soap';
+import { soap as fakeSoap } from './fake-soap.client.js'
 import consola from 'consola';
-import { soap } from 'strong-soap';
 import { DICTIONARY } from './pos.js';
 import { getArgs } from '../helpers/utils.js';
+import { CONFIG } from "../config.js"
 
 dotenv.config();
+
+let soap;
+
+//Soap Client
+if (CONFIG.isDev) {
+    soap = fakeSoap;
+} else {
+    soap = Soap;
+};
 
 const checkRequest = ({ terminalId }) => {
     
@@ -54,8 +65,6 @@ const checkRequest = ({ terminalId }) => {
                     ],
                 },
             };
-
-            console.log("ZRFC_POS_TBK_RESPONSE args__", args);
 
             client.ZRFC_POS_TBK_RESPONSE(args, async (err, _) => {
                 if (err) {

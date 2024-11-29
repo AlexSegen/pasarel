@@ -1,0 +1,23 @@
+{
+    "functionCode": "0250",
+    "responseCode": 0,
+    "commerceCode": 0,
+    "terminalId": 12345,
+    "responseMessage": "getLastSale Message",
+    "successful": true,
+    "ticket": 123,
+    "authorizationCode": 1,
+    "amount": 15000,
+    "sharesNumber": 1,
+    "sharesAmount": 15000,
+    "last4Digits": 1234,
+    "operationNumber": 1,
+    "cardType": 2,
+    "accountingDate": 1,
+    "accountNumber": 1,
+    "cardBrand": 2,
+    "realDate": "realDate",
+    "realTime": "realTime",
+    "employeeId": 17,
+    "tip": null
+}

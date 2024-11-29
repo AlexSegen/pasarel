@@ -7,6 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./src/index.js",
+    "dev": "cross-env NODE_ENV=MOCKS node ./src/index.js",
     "build": "rimraf build && npx babel src --out-dir build"
   },
   "keywords": [],
@@ -15,6 +16,7 @@
   "dependencies": {
     "axios": "^1.7.7",
     "consola": "^3.2.3",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "node-cron": "^3.0.3",

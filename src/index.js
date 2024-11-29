@@ -1,20 +1,32 @@
 import cron from 'node-cron';
 import consola from 'consola';
+import { CONFIG } from "./config.js";
 import { POS } from './modules/pos.js';
 import { checkRequest } from './modules/soap-client.js'
 import { downloadWSDL } from './modules/httpclient.js';
 
 function startCron(keys) {
   cron.schedule("* * * * *", () => {
-    checkRequest(keys);
     consola.info("CRON ejecutado:", new Date().toISOString());
+    try {
+      checkRequest(keys);
+      } catch (error) {
+          console.log('error', error.message);
+          return;
+      }
   });
 };
 
 function startApp() {
+
+  if (CONFIG.isDev) {
+    consola.info('--------- RUNNING MOCKS ---------');
+  };
+
   try {
 
-    downloadWSDL();
+    if (!CONFIG.isDev)
+      downloadWSDL();
 
     POS.setDebug(true);
     POS
