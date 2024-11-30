@@ -2,6 +2,7 @@ import axios from 'axios';
 import consola from 'consola';
 import fs from 'fs';
 import { CONFIG } from "../config.js";
+import { Log } from './logger.js';
 
 export const downloadWSDL = async () => {
 	try {
@@ -18,7 +19,8 @@ export const downloadWSDL = async () => {
 		fs.writeFileSync('service.wsdl', response.data);
 		consola.success('Archivo WSDL guardado localmente.');
 
-	} catch (error) {
-		consola.error('Error al obtener el archivo WSDL:', error.message);
+	} catch (err) {
+		consola.error('Error al obtener el archivo WSDL:', err.message);
+		Log(err.message, "downloadWSDL");
 	}
 }

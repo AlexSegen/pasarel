@@ -4,14 +4,16 @@ import { CONFIG } from "./config.js";
 import { POS } from './modules/pos.js';
 import { checkRequest } from './modules/soap-client.js'
 import { downloadWSDL } from './modules/httpclient.js';
+import { Log } from './modules/logger.js';
 
 function startCron(keys) {
   cron.schedule("*/5 * * * * *", () => {
     consola.info("CRON ejecutado:", new Date().toISOString());
     try {
       checkRequest(keys);
-      } catch (error) {
-          console.log('error', error.message);
+      } catch (err) {
+          console.log('startCron error', err.message);
+          Log(err.message, 'startCron');
           return;
       }
   });
@@ -37,15 +39,25 @@ function startApp() {
         } else {
           consola.success("Connected to PORT:", port.path);
           const keys = await POS.loadKeys();
-          startCron(keys);
-          // checkRequest(keys);
+          const confirm = await consola.prompt("Quieres activar el cron?", {
+            type: "confirm",
+          });
+          
+          if(confirm) {
+            startCron(keys);
+            return;
+          } 
+          
+          checkRequest(keys);
         }
       })
       .catch((err) => {
         consola.error(`Ocurrió un error inesperado. POS: ${err.message}`);
+        Log(err.message, 'autoconnect');
       });
-  } catch (error) {
-    consola.error("Ocurrió un error al descargar archivo WSDL", error);
+  } catch (err) {
+    consola.error("Ocurrió un error al descargar archivo WSDL", err);
+    Log(err.message, 'startApp');
   }
 };
 
